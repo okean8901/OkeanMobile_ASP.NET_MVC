@@ -1,74 +1,67 @@
-# AI_CV_Analyze
+# Okean_Mobile
 
 ## Giới thiệu tổng quát
+Okean_Mobile là một dự án web được xây dựng trên nền tảng ASP.NET MVC, phục vụ cho việc quản lý và bán hàng các sản phẩm điện thoại, phụ kiện, máy tính bảng,... Dự án hỗ trợ các chức năng như quản lý sản phẩm, danh mục, giỏ hàng, đặt hàng, quản trị viên, người dùng, thanh toán, chatbot hỗ trợ khách hàng, và nhiều tính năng khác.
 
-**AI_CV_Analyze** là một hệ thống web ứng dụng trí tuệ nhân tạo để phân tích, đánh giá và gợi ý nghề nghiệp dựa trên CV (Curriculum Vitae) của người dùng. Ứng dụng hỗ trợ người dùng tải lên CV dưới nhiều định dạng (PDF, DOC, DOCX, JPG, PNG), phân tích nội dung, trích xuất kỹ năng, và đề xuất các ngành nghề phù hợp.
-
-Các tính năng chính:
-- Đăng ký, đăng nhập, quên mật khẩu cho người dùng
-- Tải lên và phân tích CV tự động
-- Trích xuất kỹ năng, kinh nghiệm, học vấn từ CV
-- Đưa ra gợi ý ngành nghề phù hợp
-- Lưu lịch sử phân tích và kết quả cho từng người dùng
+## Tính năng chính
+- Quản lý sản phẩm, danh mục, đơn hàng, người dùng
+- Đăng ký, đăng nhập, quên mật khẩu
+- Giỏ hàng và đặt hàng
+- Thanh toán đơn hàng
+- Quản trị viên và phân quyền
+- Chatbot hỗ trợ khách hàng
 
 ## Công nghệ sử dụng
-- **Backend:** ASP.NET Core MVC (.NET 7 trở lên)
-- **Frontend:** Razor Pages, HTML, CSS, JavaScript
-- **Database:** SQL Server (hoặc SQLite cho phát triển)
-- **AI/ML:** Tích hợp các dịch vụ AI để phân tích nội dung CV
-
-## Hướng dẫn cài đặt và setup
-
-### 1. Yêu cầu hệ thống
-- .NET 7 SDK hoặc mới hơn: https://dotnet.microsoft.com/download
+- ASP.NET MVC (.NET 8)
+- Entity Framework Core
 - SQL Server (hoặc SQLite cho phát triển)
-- Node.js (nếu muốn build lại các file JS/CSS frontend)
+- Bootstrap, jQuery, JavaScript
 
-### 2. Clone dự án
-```bash
-git clone <repo-url>
-cd AI_CV_Analyze
-```
+## Yêu cầu hệ thống
+- .NET 8 SDK: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+- Visual Studio 2022 trở lên (hoặc sử dụng Visual Studio Code)
+- SQL Server (hoặc SQLite)
 
-### 3. Cấu hình chuỗi kết nối Database
-- Mở file `AI_CV_Analyze/appsettings.Development.json`
-- Sửa trường `ConnectionStrings:DefaultConnection` cho phù hợp với môi trường của bạn.
+## Hướng dẫn cài đặt và chạy dự án
 
-Ví dụ:
-```json
+### 1. Clone source code
+
+git clone <link-repo>
+cd Okean_Mobile/OkeanMobile_ASP.NET_MVC/Okean_Mobile
+
+
+### 2. Cài đặt các package cần thiết
+Nếu sử dụng Visual Studio, các package sẽ tự động được khôi phục khi mở solution. Nếu dùng CLI:
+
+dotnet restore
+
+
+### 3. Cấu hình chuỗi kết nối database
+- Mở file `appsettings.json` hoặc `appsettings.Development.json`
+- Sửa lại chuỗi kết nối cho phù hợp với SQL Server của bạn:
+json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=AI_CV_Analyze;Trusted_Connection=True;MultipleActiveResultSets=true"
+  "DefaultConnection": "Server=.;Database=OkeanMobileDb;Trusted_Connection=True;MultipleActiveResultSets=true"
 }
-```
+
 
 ### 4. Chạy migration để tạo database
-```bash
-cd AI_CV_Analyze
-# Nếu chưa cài dotnet-ef:
-dotnet tool install --global dotnet-ef
-# Chạy migration:
+
 dotnet ef database update
-```
 
-### 5. Chạy ứng dụng
-```bash
-dotnet run --project AI_CV_Analyze/AI_CV_Analyze.csproj
-```
-- Ứng dụng sẽ chạy tại địa chỉ: http://localhost:5000 hoặc http://localhost:5001
 
-### 6. Truy cập giao diện web
-- Mở trình duyệt và truy cập: http://localhost:5000
-- Đăng ký tài khoản, đăng nhập và bắt đầu sử dụng các tính năng phân tích CV.
+### 5. Chạy dự án
 
-## Một số lưu ý
-- Nếu gặp lỗi về database, kiểm tra lại chuỗi kết nối và quyền truy cập SQL Server.
-- Để gửi email (quên mật khẩu), cần cấu hình SMTP trong `appsettings.Development.json`.
-- Có thể chạy ứng dụng bằng Docker, tham khảo file `Dockerfile` trong thư mục dự án.
+dotnet run
 
-## Đóng góp
-Mọi đóng góp, báo lỗi hoặc đề xuất tính năng mới đều được hoan nghênh! Vui lòng tạo issue hoặc pull request trên repository này.
+Hoặc nhấn F5 trong Visual Studio.
+
+### 6. Truy cập website
+Mở trình duyệt và truy cập: http://localhost:5000 hoặc http://localhost:port bạn cấu hình.
+
+## Thông tin liên hệ
+- Tác giả: <Phạm Lê Trường>
+- Email: <phamletruong2001@gmail.com>
 
 ---
-**AI_CV_Analyze** - Dự án phân tích CV ứng dụng AI hỗ trợ định hướng nghề nghiệp cho người Việt.
-
-
+Nếu có bất kỳ thắc mắc hoặc lỗi phát sinh, vui lòng liên hệ để được hỗ trợ! 
