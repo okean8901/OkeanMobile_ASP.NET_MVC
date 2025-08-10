@@ -49,6 +49,9 @@ namespace Okean_Mobile
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession();
             builder.Services.AddMemoryCache();
+            
+            // Add HttpClient for Azure OpenAI
+            builder.Services.AddHttpClient();
 
             var app = builder.Build();
 

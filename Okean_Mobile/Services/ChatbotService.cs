@@ -7,6 +7,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Okean_Mobile.Data;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace Okean_Mobile.Services
 {
@@ -21,16 +25,26 @@ namespace Okean_Mobile.Services
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
         private readonly SpeechConfig _speechConfig;
+        private readonly HttpClient _httpClient;
+        private readonly string _openAIEndpoint;
+        private readonly string _openAIKey;
+        private readonly string _openAIDeploymentName;
 
-        public ChatbotService(IConfiguration configuration, ApplicationDbContext context)
+        public ChatbotService(IConfiguration configuration, ApplicationDbContext context, HttpClient httpClient)
         {
             _configuration = configuration;
             _context = context;
+            _httpClient = httpClient;
 
             var speechKey = configuration["AzureSpeech:Key"];
             var speechRegion = configuration["AzureSpeech:Region"];
             _speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
             _speechConfig.SpeechRecognitionLanguage = "vi-VN";
+
+            // Azure OpenAI configuration
+            _openAIEndpoint = configuration["AzureAI:OpenAIEndpoint"];
+            _openAIKey = configuration["AzureAI:OpenAIKey"];
+            _openAIDeploymentName = configuration["AzureAI:OpenAIDeploymentName"];
         }
 
         public async Task<string> ProcessMessageAsync(string message)
@@ -38,6 +52,134 @@ namespace Okean_Mobile.Services
             if (string.IsNullOrWhiteSpace(message))
                 return "Xin lỗi, tôi không hiểu tin nhắn của bạn.";
 
+            // Lấy thông tin context từ database
+            var contextInfo = await GetContextInfoAsync();
+            
+            // Tạo prompt cho Azure OpenAI
+            var prompt = CreatePrompt(message, contextInfo);
+            
+            try
+            {
+                // Gọi Azure OpenAI API
+                var aiResponse = await CallAzureOpenAIAsync(prompt);
+                
+                // Nếu AI không trả về câu trả lời phù hợp, fallback về logic cũ
+                if (string.IsNullOrWhiteSpace(aiResponse) || aiResponse.Contains("I don't know") || aiResponse.Contains("I cannot"))
+                {
+                    return await ProcessMessageWithFallbackAsync(message);
+                }
+                
+                return aiResponse;
+            }
+            catch (Exception ex)
+            {
+                // Log error và fallback về logic cũ
+                Console.WriteLine($"Azure OpenAI error: {ex.Message}");
+                return await ProcessMessageWithFallbackAsync(message);
+            }
+        }
+
+        private async Task<string> GetContextInfoAsync()
+        {
+            var contextInfo = new StringBuilder();
+            
+            // Lấy thông tin sản phẩm
+            var products = await _context.Products
+                .Where(p => p.IsActive)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(10)
+                .ToListAsync();
+            
+            if (products.Any())
+            {
+                contextInfo.AppendLine("Sản phẩm hiện có:");
+                foreach (var product in products)
+                {
+                    contextInfo.AppendLine($"- {product.Name}: {product.Price:N0}đ - {product.Description}");
+                }
+            }
+            
+            // Lấy thông tin khuyến mãi
+            contextInfo.AppendLine("\nChương trình khuyến mãi:");
+            contextInfo.AppendLine("- Giảm 10% cho đơn hàng trên 10 triệu");
+            contextInfo.AppendLine("- Tặng phụ kiện khi mua iPhone");
+            contextInfo.AppendLine("- Trả góp 0% lãi suất");
+            contextInfo.AppendLine("- Tặng bảo hiểm rơi vỡ");
+            contextInfo.AppendLine("- Giảm 5% cho khách hàng thân thiết");
+            
+            // Thông tin liên hệ
+            contextInfo.AppendLine("\nThông tin liên hệ:");
+            contextInfo.AppendLine("- Điện thoại: 1900 1234");
+            contextInfo.AppendLine("- Email: support@okeanmobile.com");
+            contextInfo.AppendLine("- Zalo: 0901234567");
+            contextInfo.AppendLine("- Facebook: Okean Mobile");
+            contextInfo.AppendLine("- Thời gian làm việc: 8h-22h hàng ngày");
+            
+            // Địa chỉ cửa hàng
+            contextInfo.AppendLine("\nĐịa chỉ cửa hàng:");
+            contextInfo.AppendLine("- Hà Nội: 123 Trần Duy Hưng, Cầu Giấy");
+            contextInfo.AppendLine("- Hồ Chí Minh: 456 Nguyễn Văn Linh, Quận 7");
+            contextInfo.AppendLine("- Đà Nẵng: 789 Lê Duẩn, Hải Châu");
+            
+            return contextInfo.ToString();
+        }
+
+        private string CreatePrompt(string userMessage, string contextInfo)
+        {
+            return $@"Bạn là trợ lý ảo của Okean Mobile - một cửa hàng bán điện thoại và thiết bị di động. 
+Hãy trả lời câu hỏi của khách hàng một cách thân thiện, hữu ích và chính xác bằng tiếng Việt.
+
+Thông tin về cửa hàng:
+{contextInfo}
+
+Chính sách và dịch vụ:
+- Bảo hành 12 tháng chính hãng
+- Đổi trả trong 7 ngày nếu sản phẩm có lỗi
+- Giao hàng toàn quốc, phí ship 0-30k tùy khu vực
+- Thời gian giao: 1-3 ngày
+- Giao hàng nhanh trong 2h tại Hà Nội và HCM
+
+Câu hỏi của khách hàng: {userMessage}
+
+Hãy trả lời một cách tự nhiên, thân thiện và hữu ích. Nếu khách hàng hỏi về sản phẩm cụ thể, hãy đề xuất sản phẩm phù hợp từ danh sách trên.";
+        }
+
+        private async Task<string> CallAzureOpenAIAsync(string prompt)
+        {
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                    new { role = "system", content = "Bạn là trợ lý ảo thân thiện của Okean Mobile. Luôn trả lời bằng tiếng Việt." },
+                    new { role = "user", content = prompt }
+                },
+                max_tokens = 1000,
+                temperature = 0.7,
+                top_p = 0.95,
+                frequency_penalty = 0,
+                presence_penalty = 0
+            };
+
+            var json = JsonSerializer.Serialize(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Add("api-key", _openAIKey);
+
+            var response = await _httpClient.PostAsync(_openAIEndpoint, content);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(responseContent);
+                return responseObject?.choices?.FirstOrDefault()?.message?.content?.Trim();
+            }
+            
+            throw new Exception($"Azure OpenAI API error: {response.StatusCode}");
+        }
+
+        private async Task<string> ProcessMessageWithFallbackAsync(string message)
+        {
             message = message.ToLower();
 
             // Tìm kiếm sản phẩm trong database
@@ -300,5 +442,21 @@ namespace Okean_Mobile.Services
                 }
             }
         }
+    }
+
+    // Classes for Azure OpenAI response
+    public class OpenAIResponse
+    {
+        public List<Choice> choices { get; set; }
+    }
+
+    public class Choice
+    {
+        public Message message { get; set; }
+    }
+
+    public class Message
+    {
+        public string content { get; set; }
     }
 } 

@@ -20,11 +20,18 @@ namespace Okean_Mobile.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.Message))
             {
-                return BadRequest("Message cannot be empty");
+                return BadRequest(new { error = "Message cannot be empty" });
             }
 
-            var response = await _chatbotService.ProcessMessageAsync(request.Message);
-            return Ok(new { message = response });
+            try
+            {
+                var response = await _chatbotService.ProcessMessageAsync(request.Message);
+                return Ok(new { message = response, success = true });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while processing your message", details = ex.Message });
+            }
         }
 
         [HttpPost("speech-to-text")]
@@ -32,12 +39,25 @@ namespace Okean_Mobile.Controllers
         {
             if (audioFile == null || audioFile.Length == 0)
             {
-                return BadRequest("Audio file is required");
+                return BadRequest(new { error = "Audio file is required" });
             }
 
-            using var stream = audioFile.OpenReadStream();
-            var text = await _chatbotService.ProcessSpeechToTextAsync(stream);
-            return Ok(new { text });
+            try
+            {
+                using var stream = audioFile.OpenReadStream();
+                var text = await _chatbotService.ProcessSpeechToTextAsync(stream);
+                return Ok(new { text = text, success = true });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while processing speech", details = ex.Message });
+            }
+        }
+
+        [HttpGet("health")]
+        public IActionResult HealthCheck()
+        {
+            return Ok(new { status = "healthy", timestamp = DateTime.UtcNow });
         }
     }
 
