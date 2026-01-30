@@ -1,0 +1,101 @@
+Test Case ID,Mô tả test,Module,Bước thực hiện,Kết quả mong đợi,Kết quả thực tế,Pass / Fail,Ghi chú,Ngày test,Người test
+TC001,Đăng nhập với tài khoản hợp lệ,Account,"1. Truy cập trang đăng nhập
+2. Nhập email/username
+3. Nhập mật khẩu
+4. Click nút Đăng nhập","Đăng nhập thành công, Redirect về trang chủ, Hiển thị thông tin user",,Pass,,
+TC002,Đăng nhập với mật khẩu sai,Account,"1. Truy cập trang đăng nhập
+2. Nhập email/username đúng
+3. Nhập mật khẩu sai
+4. Click nút Đăng nhập","Hiển thị thông báo lỗi 'Mật khẩu không đúng', Không đăng nhập được",,Pass,,
+TC003,Đăng nhập với email không tồn tại,Account,"1. Truy cập trang đăng nhập
+2. Nhập email không tồn tại
+3. Nhập mật khẩu
+4. Click nút Đăng nhập","Hiển thị thông báo lỗi 'Email không tồn tại'",,Pass,,
+TC004,Đăng nhập với email trống,Account,"1. Truy cập trang đăng nhập
+2. Bỏ trống email
+3. Nhập mật khẩu
+4. Click nút Đăng nhập","Hiển thị thông báo 'Email không được để trống' hoặc disable nút Đăng nhập",,Pass,,
+TC005,Đăng nhập với mật khẩu trống,Account,"1. Truy cập trang đăng nhập
+2. Nhập email
+3. Bỏ trống mật khẩu
+4. Click nút Đăng nhập","Hiển thị thông báo 'Mật khẩu không được để trống' hoặc disable nút Đăng nhập",,Pass,,
+TC006,Đăng ký tài khoản mới,Account,"1. Truy cập trang đăng ký
+2. Nhập email chưa sử dụng
+3. Nhập mật khẩu
+4. Nhập lại mật khẩu
+5. Click nút Đăng ký","Tài khoản được tạo thành công, Redirect về trang đăng nhập hoặc trang chủ",,Not Started,,
+TC007,Đăng ký với email đã tồn tại,Account,"1. Truy cập trang đăng ký
+2. Nhập email đã được sử dụng
+3. Nhập mật khẩu
+4. Nhập lại mật khẩu
+5. Click nút Đăng ký","Hiển thị thông báo lỗi 'Email đã được sử dụng'",,Not Started,,
+TC008,Đăng ký với mật khẩu không khớp,Account,"1. Truy cập trang đăng ký
+2. Nhập email
+3. Nhập mật khẩu
+4. Nhập lại mật khẩu khác
+5. Click nút Đăng ký","Hiển thị thông báo 'Mật khẩu không khớp'",,Not Started,,
+TC009,Xem danh sách sản phẩm,Product,"1. Truy cập trang chủ hoặc trang sản phẩm
+2. Scroll xem danh sách sản phẩm","Hiển thị danh sách sản phẩm với thông tin: tên, hình ảnh, giá, đánh giá",,Not Started,,
+TC010,Tìm kiếm sản phẩm theo từ khóa,Product,"1. Truy cập trang sản phẩm
+2. Nhập từ khóa tìm kiếm
+3. Click nút Tìm kiếm","Hiển thị danh sách sản phẩm phù hợp với từ khóa tìm kiếm",,Not Started,,
+TC011,Lọc sản phẩm theo danh mục,Product,"1. Truy cập trang sản phẩm
+2. Chọn danh mục từ menu
+3. Xem kết quả","Hiển thị sản phẩm thuộc danh mục được chọn",,Not Started,,
+TC012,Lọc sản phẩm theo giá,Product,"1. Truy cập trang sản phẩm
+2. Chọn khoảng giá (VD: 100k-500k)
+3. Xem kết quả","Hiển thị sản phẩm có giá trong khoảng được chọn",,Not Started,,
+TC013,Xem chi tiết sản phẩm,Product,"1. Truy cập trang sản phẩm
+2. Click vào một sản phẩm","Hiển thị trang chi tiết sản phẩm với đầy đủ thông tin: mô tả, hình ảnh, giá, đánh giá, số sao",,Not Started,,
+TC014,Thêm sản phẩm vào giỏ hàng,Cart,"1. Xem chi tiết sản phẩm
+2. Chọn số lượng
+3. Click 'Thêm vào giỏ hàng'","Sản phẩm được thêm vào giỏ hàng, Hiển thị thông báo thành công, Số lượng giỏ hàng tăng",,Not Started,,
+TC015,Xem giỏ hàng,Cart,"1. Click biểu tượng giỏ hàng
+2. Xem chi tiết giỏ","Hiển thị danh sách sản phẩm trong giỏ, Tổng tiền, Nút thanh toán",,Not Started,,
+TC016,Cập nhật số lượng trong giỏ hàng,Cart,"1. Truy cập giỏ hàng
+2. Thay đổi số lượng sản phẩm
+3. Xem tổng tiền","Số lượng và tổng tiền được cập nhật tương ứng",,Not Started,,
+TC017,Xóa sản phẩm khỏi giỏ hàng,Cart,"1. Truy cập giỏ hàng
+2. Click nút Xóa trên một sản phẩm
+3. Xem kết quả","Sản phẩm bị xóa khỏi giỏ, Tổng tiền được cập nhật",,Not Started,,
+TC018,Thanh toán đơn hàng (VNPay),Payment,"1. Xem giỏ hàng
+2. Click nút Thanh toán
+3. Chọn phương thức thanh toán: VNPay
+4. Nhập thông tin giao hàng
+5. Confirm thanh toán","Redirect đến trang VNPay, Thanh toán thành công, Tạo đơn hàng mới",,Not Started,,
+TC019,Xem lịch sử đơn hàng,Order,"1. Đăng nhập tài khoản
+2. Truy cập 'Đơn hàng của tôi'
+3. Xem danh sách đơn hàng","Hiển thị danh sách đơn hàng của user với trạng thái, ngày đặt, tổng tiền",,Not Started,,
+TC020,Xem chi tiết đơn hàng,Order,"1. Truy cập 'Đơn hàng của tôi'
+2. Click vào một đơn hàng","Hiển thị chi tiết đơn hàng: sản phẩm, số lượng, giá, trạng thái, thời gian đặt",,Not Started,,
+TC021,Hủy đơn hàng (chưa giao),Order,"1. Xem chi tiết đơn hàng có trạng thái 'Chờ xác nhận'
+2. Click nút Hủy đơn
+3. Confirm hủy","Đơn hàng bị hủy, Trạng thái thay đổi thành 'Đã hủy'",,Not Started,,
+TC022,Đánh giá sản phẩm,Review,"1. Xem đơn hàng đã hoàn thành
+2. Click nút 'Đánh giá'
+3. Chọn số sao
+4. Viết nhận xét
+5. Submit","Đánh giá được lưu, Hiển thị thông báo thành công",,Not Started,,
+TC023,Xem đánh giá của sản phẩm,Review,"1. Xem chi tiết sản phẩm
+2. Scroll xem phần đánh giá","Hiển thị danh sách đánh giá từ các user: số sao, nhận xét, tên user, ngày đánh giá",,Not Started,,
+TC024,Admin xem danh sách sản phẩm,Admin,"1. Đăng nhập với tài khoản admin
+2. Truy cập 'Quản lý sản phẩm'","Hiển thị danh sách toàn bộ sản phẩm, Có nút Sửa, Xóa",,Not Started,,
+TC025,Admin thêm sản phẩm mới,Admin,"1. Truy cập 'Quản lý sản phẩm'
+2. Click 'Thêm sản phẩm mới'
+3. Nhập thông tin sản phẩm (tên, mô tả, giá, hình ảnh, danh mục)
+4. Click Lưu","Sản phẩm được tạo mới, Hiển thị trong danh sách sản phẩm",,Not Started,,
+TC026,Admin sửa thông tin sản phẩm,Admin,"1. Truy cập 'Quản lý sản phẩm'
+2. Click nút Sửa trên một sản phẩm
+3. Thay đổi thông tin
+4. Click Lưu","Thông tin sản phẩm được cập nhật",,Not Started,,
+TC027,Admin xóa sản phẩm,Admin,"1. Truy cập 'Quản lý sản phẩm'
+2. Click nút Xóa trên một sản phẩm
+3. Confirm xóa","Sản phẩm bị xóa khỏi hệ thống",,Not Started,,
+TC028,Admin xem danh sách đơn hàng,Admin,"1. Đăng nhập với tài khoản admin
+2. Truy cập 'Quản lý đơn hàng'","Hiển thị danh sách toàn bộ đơn hàng, Có thông tin: ID, khách hàng, tổng tiền, trạng thái",,Not Started,,
+TC029,Admin cập nhật trạng thái đơn hàng,Admin,"1. Xem danh sách đơn hàng
+2. Click vào một đơn hàng
+3. Thay đổi trạng thái (VD: 'Chờ xác nhận' -> 'Đang giao')
+4. Click Lưu","Trạng thái đơn hàng được cập nhật",,Not Started,,
+TC030,Responsive Design - Xem trên mobile,UI,"1. Truy cập website trên thiết bị mobile
+2. Kiểm tra layout, button, form","Layout tự động điều chỉnh cho mobile, Tất cả nút bấm dễ nhấn, Không scroll ngang",,Not Started,,

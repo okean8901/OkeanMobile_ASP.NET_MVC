@@ -1,0 +1,26 @@
+Bug ID,Tiêu đề,Mô tả lỗi,Module,Bước tái hiện,Kết quả thực tế,Kết quả mong đợi,Mức độ (Low/Medium/High),Trạng thái (Open/Fixed/Retest/Closed),Người báo cáo,Người xử lý,Ngày báo cáo,Ngày fixed,Ghi chú
+BUG001,Lỗi hiển thị giá sản phẩm,,Product,"1. Truy cập trang chủ
+2. Tìm một sản phẩm có giá chứa dấu chấm
+3. Xem giá hiển thị","Giá hiển thị không đúng định dạng, VD: 100.000 hiển thị thành 100000","Giá phải hiển thị: 100.000 VND",Medium,Open,,,,
+BUG002,Lỗi xóa sản phẩm khỏi giỏ hàng,,Cart,"1. Thêm 1 sản phẩm vào giỏ
+2. Xem giỏ hàng
+3. Click nút Xóa","Khi click Xóa không có phản hồi, sản phẩm vẫn còn","Sản phẩm phải bị xóa ngay lập tức",High,Open,,,,
+BUG003,Lỗi hiển thị số lượng giỏ hàng,,Cart,"1. Thêm 3 sản phẩm vào giỏ
+2. Xem icon giỏ hàng","Icon giỏ hàng hiển thị số 1 thay vì 3","Icon giỏ hàng phải hiển thị số 3",Medium,Open,,,,
+BUG004,Lỗi mất dữ liệu khi thanh toán bị gián đoạn,,Payment,"1. Tạo đơn hàng
+2. Chọn thanh toán VNPay
+3. Tắt tab trình duyệt giữa lúc thanh toán","Dữ liệu giỏ bị mất, không thể quay lại đặt hàng","Phải lưu lại giỏ hàng trước khi redirect sang VNPay",High,Open,,,,
+BUG005,Lỗi cập nhật số lượng sản phẩm trong giỏ,,Cart,"1. Xem giỏ hàng
+2. Thay đổi số lượng sản phẩm
+3. Xem tổng tiền","Tổng tiền không cập nhật tương ứng","Tổng tiền phải tự động cập nhật khi thay đổi số lượng",High,Open,,,,
+BUG006,Lỗi hiển thị menu navigation trên mobile,,UI,"1. Mở website trên mobile (kích thước <= 480px)
+2. Xem menu navigation","Menu bị che phủ nội dung hoặc không hiển thị đúng","Menu phải responsive, dễ nhấn trên mobile",Medium,Open,,,,
+BUG007,Lỗi ký tự đặc biệt trong tên sản phẩm,,Product,"1. Admin tạo sản phẩm có tên chứa ký tự đặc biệt (VD: <>""')
+2. Xem tên trên trang khách hàng","Tên sản phẩm hiển thị lỗi, ký tự bị mã hóa sai","Tên phải hiển thị đúng hoặc được escape an toàn",Low,Open,,,,
+BUG008,Lỗi không gửi email xác nhận đơn hàng,,Order,"1. Đặt hàng xong
+2. Kiểm tra email","Không nhận được email xác nhận đơn hàng","Phải gửi email xác nhận trong vòng 5 phút sau khi đặt hàng",High,Open,,,,
+BUG009,Lỗi hiển thị đánh giá 5 sao,,Review,"1. Xem chi tiết sản phẩm
+2. Xem phần đánh giá 5 sao","Chỉ hiển thị 4 sao thay vì 5","Phải hiển thị đúng số sao của mỗi đánh giá",Low,Open,,,,
+BUG010,Lỗi filter danh mục không hoạt động,,Product,"1. Truy cập trang sản phẩm
+2. Click filter danh mục 'Điện thoại'
+3. Kiểm tra kết quả","Danh sách sản phẩm không thay đổi, vẫn hiển thị tất cả danh mục","Phải chỉ hiển thị sản phẩm thuộc danh mục 'Điện thoại'",High,Open,,,,
